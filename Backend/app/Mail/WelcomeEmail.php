@@ -32,9 +32,12 @@ class WelcomeEmail extends Mailable
     public function build()
     {   
         $this->to($this->user->email, $this->user->name);
+
         $this->subject('Welcome to task manager');
+        
         return $this->view('mails.welcomeEmail')->with([
-            'username' => $this->user->name
+            'username' => $this->user->name,
+            'email' => $this->user->email
         ]);
     }
 }
