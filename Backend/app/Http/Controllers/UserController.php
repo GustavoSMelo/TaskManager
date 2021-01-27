@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PersonalAccessTokensModel;
 use App\Models\UserModel;
 use Exception;
 use Illuminate\Http\Request;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
@@ -42,6 +44,26 @@ class UserController extends Controller
             ], 400);
         }
     }
+
+    public function show (int $id) {
+        
+        try {
+
+            $user = UserModel::find($id)->first();
+
+            $token = PersonalAccessTokensModel::where('tokenable_id', $id)->first();
+
+            if ($token) {
+                return $user;
+            }
+
+        } catch (Exception $err) {
+            return response()->json([
+                'error' => 'this user not founded'
+            ], 401);
+        }
+
+    } 
 
     public function update () {
 
