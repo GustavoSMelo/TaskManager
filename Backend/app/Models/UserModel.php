@@ -19,5 +19,9 @@ class UserModel extends Model
         'password_token'
     ];
 
+    public function task () {
+        return $this->belongsTo(TaskModel::class, 'user_id', 'id');
+    }
+
     use HasFactory, HasApiTokens, Notifiable;
 }
