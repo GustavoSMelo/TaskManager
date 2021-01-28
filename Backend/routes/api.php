@@ -21,7 +21,9 @@ Route::prefix('user')->group(function () {
     
     Route::post('/', [UserController::class, 'store']);
 
-    Route::get('/{id}', [UserController::class, 'show'])->middleware('auth:sanctum');
+    Route::get('/', [UserController::class, 'show'])->middleware(['auth:sanctum', 'verify.token']);
+
+    Route::put('/', [UserController::class, 'update'])->middleware(['auth:sanctum', 'verify.token']);
 
 });
 
