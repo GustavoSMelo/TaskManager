@@ -23,7 +23,6 @@ class LoginController extends Controller
 
                     return response()->json([
                         'token' => $token,
-                        'id' => $user->id
                     ]);
 
                 } else {
