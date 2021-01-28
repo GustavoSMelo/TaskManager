@@ -11,24 +11,39 @@ class TaskController extends Controller
 {
     public function index(Request $request) {
         try {
-            return UserModel::find($request->user()->currentAccessToken->tokenable->id);
+
+            $tasks = TaskModel::where('user_id', $request->user()->currentAccessToken()->tokenable->id)->get();
+            return $tasks;
+
         } catch (Exception $e) {
             return response()->json([
-                'error' => 'this user dont have any task registred'
+                'error' => 'this user dont have any task registred '
             ]);
         }
     }
 
     public function store (Request $request) {
 
-        $days_tasks = TaskModel::where('week_days', $request->input('week_days'));
+        $days_tasks = TaskModel::where('week_days', $request->input('week_days'))->get();
 
         foreach ($days_tasks as $task) {
-            if($request->input('week_days') >= $task->start_at && $request->input('week_days') <= $task->end_at) {
+
+            if (floatval($request->input('start_at')) >= floatval($task->start_at) 
+            && floatval($request->input('start_at')) < floatval($task->end_at)) {
+
                 return response()->json([
                     'error' => 'you already have a task in this period'
                 ], 400);
             }
+
+            else if (floatval($request->input('end_at')) > floatval($task->start_at) 
+            && floatval($request->input('end_at')) <= floatval($task->end_at)) {
+
+                return response()->json([
+                    'error' => 'you already have a task in this period'
+                ], 400);
+
+            } 
         }
 
         $newTask = new TaskModel();
@@ -53,11 +68,65 @@ class TaskController extends Controller
         
     }
 
-    public function update(){
+    public function update (Request $request, int $id) {
+        
+        $task = TaskModel::where('id', $id)->first();
+        $allDayTask = TaskModel::where('week_days', $request->input('week_days'))->get();
+
+        foreach ($allDayTask as $tasks) {
+
+            if (floatval($request->input('start_at')) >= floatval($tasks->start_at) &&
+            floatval($request->input('start_at')) < floatval($tasks->end_at)) {
+
+                return response()->json([
+                    'error' => 'Already have a task in this period'
+                ], 400);
+            } 
+            
+            else if (floatval($request->input('end_at')) > floatval($tasks->start_at) &&
+            floatval($request->input('end_at') <= floatval($tasks->end_at))) {
+
+                return response()->json([
+                    'error' => 'Already have a task in this period'
+                ], 400);
+            } 
+            
+            else {
+
+                $task->name = $request->input('name');
+                $task->description = $request->input('description');
+                $task->user_id = $request->user()->currentAccessToken()->tokenable->id;
+                $task->start_at = $request->input('start_at');
+                $task->end_at = $request->input('end_at');
+                $task->week_days = $request->input('week_days');
+
+                $task->save();
+
+                return response()->json([
+                    'message' => 'task created with success '
+                ]);
+            } 
+        }
 
     }
 
-    public function delete(){
-        
+    public function destroy (int $id) {
+
+        try {
+            $task = TaskModel::where('id', $id)->first();
+
+            $task->delete();
+    
+            return response()->json([
+                'message' => 'Task deleted with success'
+            ]);
+        } catch (Exception $err) {
+
+            return response()->json([
+                'error' => 'this task does not exists'
+            ], 400);
+
+        }
+
     }
 }
