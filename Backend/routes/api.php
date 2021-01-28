@@ -5,6 +5,7 @@ use App\Http\Controllers\VerifyEmailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,8 +38,14 @@ Route::prefix('auth')->group(function () {
 
 Route::get('/verify/email/{email}', [VerifyEmailController::class, 'store']);
 
-Route::middleware('auth:sanctum')->get('/test', function () {
-    return response()->json([
-        'message' => 'hello world'
-    ]);
-});
+Route::middleware(['auth:sanctum', 'verify.token'])->prefix('task')->group(function () {
+    Route::post('/', [TaskController::class, 'store']);
+
+    Route::get('/', [TaskController::class, 'index']);
+
+    Route::get('/{id}', [TaskController::class, 'show']);
+
+    Route::put('/{id}', [TaskController::class, 'update']);
+
+    Route::delete('/{id}', [TaskController::class, 'destroy']);
+}); 
