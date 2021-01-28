@@ -20,7 +20,7 @@ class UserModel extends Model
     ];
 
     public function task () {
-        return $this->belongsTo(TaskModel::class, 'user_id', 'id');
+        return $this->belongsTo(TaskModel::class, 'user_id');
     }
 
     use HasFactory, HasApiTokens, Notifiable;
