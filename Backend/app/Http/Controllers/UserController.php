@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PersonalAccessTokensModel;
 use App\Models\UserModel;
 use Exception;
 use Illuminate\Http\Request;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class UserController extends Controller
 {
@@ -45,27 +43,49 @@ class UserController extends Controller
         }
     }
 
-    public function show (int $id) {
-        
+    public function show (Request $request) {
         try {
-
-            $user = UserModel::find($id)->first();
-
-            $token = PersonalAccessTokensModel::where('tokenable_id', $id)->first();
-
-            if ($token) {
-                return $user;
-            }
-
+            return UserModel::where('id', $request->header('id'))->first();
         } catch (Exception $err) {
             return response()->json([
-                'error' => 'this user not founded'
+                'error' =>  'This user not exists or you trying to access another account '
             ], 401);
         }
-
     } 
 
-    public function update () {
+    public function update (Request $request) {
+
+        try {
+
+            $user = Usermodel::find($request->header('id'));
+
+            if ($user->name !== $request->input('name')) {
+                $user->name = $request->input('name');
+            }
+
+            if ($user->email !== $request->input('email')) {
+                $user->email = $request->input('email');
+            }    
+
+            if (!password_verify($request->input('password'), $user->password)) {
+
+                $password_hash = password_hash($request->input('password'), PASSWORD_DEFAULT);
+                $user->password = $password_hash;
+            }
+
+            $user->update();
+
+            return response()->json([
+                'message' => 'user updated with success ' 
+            ]);
+
+        } catch (Exception $err) {
+
+            return response()->json([
+                'message' => 'User not found, please try again '.$err
+            ], 400);
+
+        }
 
     }
 }
