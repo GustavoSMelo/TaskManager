@@ -18,5 +18,9 @@ class TaskModel extends Model
         'end_at',
     ];
 
+    public function user () {
+        return $this->hasMany(UserModel::class, 'id', 'user_id');
+    }
+
     use HasFactory;
 }
