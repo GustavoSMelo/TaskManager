@@ -1,6 +1,14 @@
-import { ThemeProvider } from "styled-components"
+import { ThemeProvider, createGlobalStyle } from "styled-components"
 
 function App ({Component, pageProps}) {
+
+    const GlobalTheme = createGlobalStyle`
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+    `
 
     const theme = {
         colors: {
@@ -9,9 +17,12 @@ function App ({Component, pageProps}) {
     }
 
     return (
-        <ThemeProvider theme={theme}>
-            <Component {...pageProps}/>
-        </ThemeProvider>
+        <>
+            <GlobalTheme />
+            <ThemeProvider theme={theme}>
+                <Component {...pageProps}/>
+            </ThemeProvider>
+        </>
     )
 }
 
