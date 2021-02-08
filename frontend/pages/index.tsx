@@ -1,14 +1,28 @@
-import { Container } from '../styles/index'
+import { Container } from '../styles/index.ts'
 
-export default function Home () {
+const Home = () => {
   return (
     <Container>
-        <span>
-            <h1>Never be unorganizable</h1>
-        </span>
-        <figure>
-            <img src='/images/cactu.png' alt='image of cactu' />
-        </figure>
+        <section>
+            <span>
+                <h1>
+                    Never be
+                    <br />
+                    unorganizable
+                </h1>
+                <small>
+                    If you are trying to organize yourself, but can't do it. Don't hurry
+                    only, subscribe here and be organize forever. <br/>
+                    Put your tasks here and make more easily your life
+                </small>
+            </span>
+            <figure>
+                <img src='/images/humans-spa.png' alt='banner' />
+            </figure>
+        </section>
+        <button>Subscribe here</button>
     </Container>
   )
 }
+
+export default Home;
