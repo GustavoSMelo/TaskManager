@@ -19,6 +19,7 @@ class MyDocument extends Document {
             <Html lang='en'>
                 <Head>
                     {this.props.styleTags}
+                    <title>Task manager</title>
                 </Head>
                 <body>
                     <Main />
