@@ -19,12 +19,12 @@ use App\Http\Controllers\TaskController;
 */
 
 Route::prefix('user')->group(function () {
-    
+
     Route::post('/', [UserController::class, 'store']);
 
-    Route::get('/', [UserController::class, 'show'])->middleware(['auth:sanctum', 'verify.token']);
+    Route::get('/', [UserController::class, 'show'])->middleware(['auth:sanctum']);
 
-    Route::put('/', [UserController::class, 'update'])->middleware(['auth:sanctum', 'verify.token']);
+    Route::put('/', [UserController::class, 'update'])->middleware(['auth:sanctum']);
 
 });
 
@@ -33,12 +33,12 @@ Route::prefix('auth')->group(function () {
     Route::post('/', [LoginController::class, 'store']);
 
     Route::delete('/', [LoginController::class, 'destroy']);
-    
+
 });
 
 Route::get('/verify/email/{email}', [VerifyEmailController::class, 'store']);
 
-Route::middleware(['auth:sanctum', 'verify.token'])->prefix('task')->group(function () {
+Route::middleware(['auth:sanctum'])->prefix('task')->group(function () {
     Route::post('/', [TaskController::class, 'store']);
 
     Route::get('/', [TaskController::class, 'index']);
@@ -48,4 +48,4 @@ Route::middleware(['auth:sanctum', 'verify.token'])->prefix('task')->group(funct
     Route::put('/{id}', [TaskController::class, 'update']);
 
     Route::delete('/{id}', [TaskController::class, 'destroy']);
-}); 
+});
