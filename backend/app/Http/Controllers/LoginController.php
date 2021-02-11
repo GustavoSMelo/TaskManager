@@ -15,7 +15,7 @@ class LoginController extends Controller
             $user = UserModel::where('email', $request->input('email'))->first();
 
             if($user !== null || $user !== []){
-                if(password_verify($request->input('password'), $user->password) && ($user->email_verified !== null || $user->email_verified !== 0 || $user->email_verified !== false)) {
+                if(password_verify($request->input('password'), $user->password) && ($user->email_verified !== null && $user->email_verified !== 0 && $user->email_verified !== false)) {
 
                     $user->tokens()->delete();
 
@@ -27,12 +27,12 @@ class LoginController extends Controller
 
                 } else {
                     return response()->json([
-                        'error' => 'password ,incorrect please try again'
+                        'error' => 'Please, verify you email or your password'
                     ], 400);
                 }
             } else {
                 return response()->json([
-                        'error' => 'email not founded in our database, please create a new account or insert a valid email'
+                        'error' => 'user not found'
                 ], 400);
             }
         } catch (Exception $e) {
@@ -40,7 +40,7 @@ class LoginController extends Controller
                 'error' => 'this user does not exists'
             ], 400);
         }
-        
+
     }
 
     public function delete (int $id) {
@@ -48,7 +48,7 @@ class LoginController extends Controller
         try {
 
             $user = UserModel::find($id)->first();
-        
+
             $user->tokens()->delete();
 
             return response()->json([
