@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import Popup from '../components/PopupBox'
 import api from '../api/api'
 import { Container } from '../styles/login.style'
+import { useRouter } from 'next/router'
 
 const Login : React.FC = () => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [PopupStatus, setPopupStatus] = useState(<></>)
+    const router = useRouter()
 
     const handleLogin = async () => {
         try {
@@ -21,6 +23,8 @@ const Login : React.FC = () => {
 
             //console.log(response);
             setPopupStatus(<></>)
+            router.push('/home')
+
         } catch (err) {
             setPopupStatus(<Popup backgroundColor={'#E09487'} textColor={'#E60A00'} message={err.response.data.error} />)
             console.error({Error: err.response.data.error});
@@ -47,7 +51,7 @@ const Login : React.FC = () => {
                     onChange={e => setPassword(e.target.value)}
                     required />
 
-                <button type="button" onClick={handleLogin} >Login </button>
+                <button type="button" onClick={handleLogin}> Login </button>
             </form>
             {PopupStatus}
         </Container>
