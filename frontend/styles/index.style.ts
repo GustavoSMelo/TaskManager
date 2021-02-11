@@ -91,6 +91,7 @@ export const Container = styled.main<{formWidth: string, formHeight: string, for
         flex-direction: row;
         align-items: center;
         justify-content: center;
+        background-color: #C1C7E3;
     }
 
     .enterForm {
@@ -124,6 +125,7 @@ export const Container = styled.main<{formWidth: string, formHeight: string, for
         margin: 15px;
         width: 460px;
         padding: 15px;
+        background-color: transparent;
     }
 
     article > form > h1 {
