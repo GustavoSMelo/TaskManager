@@ -1,10 +1,11 @@
-import { useState } from 'react'
-import { Container } from '../styles/index'
+import { useState, useEffect } from 'react'
+import { Container } from '../styles/index.style'
 import api from '../api/api'
 import Images from 'next/image'
 import Link from 'next/link'
 import { FaArrowLeft } from 'react-icons/fa'
 import { setTimeout } from 'timers'
+import Popup from '../components/PopupBox'
 
 const Home = () => {
 
@@ -12,6 +13,7 @@ const Home = () => {
     const [formHeight, setFormHeight] = useState('0vh')
     const [formDisplay, setFormDisplay] = useState('none')
     const [formDirection, setFormDirection] = useState('')
+    const [PopupStatus, setPopupStatus] = useState(<></>)
 
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
@@ -37,20 +39,28 @@ const Home = () => {
         }, 1000)
     }
 
-    const sendEmail = async () => {
+    useEffect(() => {
+        setInterval(() => {
+            setPopupStatus(<></>)
+        }, 10000)
+    }, [PopupStatus])
 
+    const sendEmail = async () => {
         try {
-            await api.post('/user/', {
-                name,
-                email,
-                password
+
+            await api.post('/api/user', {email, name, password}, {
+                headers: {
+                    'Content-Type': 'application/json',
+                }
             })
 
+            setPopupStatus(<Popup backgroundColor={'#9EE38D'} textColor={'#005407'} message={'User created with success '} />)
         } catch (err) {
-            console.error('error');
+
+            console.log({Error: err});
+
+            setPopupStatus(<Popup backgroundColor={'#E09487'} textColor={'#E60A00'} message={'Some fields is missing or email already exists'} />)
         }
-
-
     }
 
     return (
@@ -122,9 +132,10 @@ const Home = () => {
                         id='password'
                         required />
 
-                    <button type='button'>Sign in</button>
+                    <button type='button' onClick={sendEmail}>Sign in</button>
                 </form>
             </article>
+            {PopupStatus}
         </Container>
     )
 }
