@@ -1,45 +1,66 @@
 import React, { useState } from 'react'
 import { Container } from '../styles/home.style'
 import { FaArrowRight } from 'react-icons/fa'
+import { useRouter } from 'next/router'
 
 const Home: React.FC = () => {
 
-    const [days, setDays] = useState(['Monday', 'Tuesday', 'Wednesday'])
-    const [daysOfWeek, setDaysOfWeek] = useState(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])
-    const [choosedDay, setChoosedDay] = useState('Tuesday')
+    const [choosedDay, setChoosedDay] = useState('')
+    const [btnClass, setBtnClass] = useState('btnNotChoosed')
+    const [dayClass, setDayClass] = useState([])
+    const router = useRouter();
 
-    const handleChangeDay = (indexDay: number) => {
-        const currentlyIndexDay = daysOfWeek.findIndex(day => day === choosedDay)
+    const handleSelectDay = (day: string, index: number) => {
 
-        if (indexDay === 0) {
-            setDays([daysOfWeek[currentlyIndexDay - 2], daysOfWeek[currentlyIndexDay - 1], daysOfWeek[currentlyIndexDay]])
+        setChoosedDay(day)
+        setBtnClass('btnChoosed')
 
-            console.log([daysOfWeek[currentlyIndexDay - 2], daysOfWeek[currentlyIndexDay - 1], daysOfWeek[currentlyIndexDay]])
+        const support = []
 
-            setChoosedDay(daysOfWeek[currentlyIndexDay - 1])
-
-        } else if (indexDay === 2) {
-            setDays([daysOfWeek[currentlyIndexDay], daysOfWeek[currentlyIndexDay + 1], daysOfWeek[currentlyIndexDay + 2]])
+        for (let i = 0; i < 7; i++) {
 
 
-            console.log([daysOfWeek[currentlyIndexDay], daysOfWeek[currentlyIndexDay + 1], daysOfWeek[currentlyIndexDay + 2]])
 
-            setChoosedDay(daysOfWeek[currentlyIndexDay + 1])
+            if (i === index) {
+                support.push('choosedDay')
+            } else {
+                support.push('')
+            }
+
+        }
+
+        setDayClass(support)
+    }
+
+    const handleClickButton = () => {
+        if(choosedDay !== null && choosedDay !== undefined && choosedDay !== '') {
+            router.push('/task')
         }
     }
 
-
-
     return (
         <Container>
-            <h1>What day you wanna see the tasks ? </h1>
-            <ul>
-                <li onClick={() => handleChangeDay(0)}>{days[0]}</li>
-                <li onClick={() => handleChangeDay(1)}>{days[1]}</li>
-                <li onClick={() => handleChangeDay(2)}>{days[2]}</li>
-            </ul>
+            <h1>Which day you want to see the tasks</h1>
 
-            <button>Continue <FaArrowRight color='#fff' fontSize={16} /></button>
+            <article>
+                <section className={dayClass[0]} onClick={() => handleSelectDay('Monday', 0)} ><h1>Monday</h1></section>
+
+                <section className={dayClass[1]} onClick={() => handleSelectDay('Tuesday', 1)} ><h1>Tuesday</h1></section>
+
+                <section className={dayClass[2]} onClick={() => handleSelectDay('Wednesday', 2)} ><h1>Wednesday</h1></section>
+
+                <section className={dayClass[3]} onClick={() => handleSelectDay('Thursday', 3)} ><h1>Thursday</h1></section>
+
+                <section className={dayClass[4]} onClick={() => handleSelectDay('Friday', 4)} ><h1>Friday</h1></section>
+
+                <section className={dayClass[5]} onClick={() => handleSelectDay('Saturday', 5)} ><h1>Saturday</h1></section>
+
+                <section className={dayClass[6]} onClick={() => handleSelectDay('Sunday', 6)} ><h1>Sunday</h1></section>
+
+            </article>
+
+            <button className={btnClass} onClick={handleClickButton} > Continue <FaArrowRight /> </button>
+
         </Container>
     )
 }
