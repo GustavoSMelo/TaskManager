@@ -19,8 +19,6 @@ const Home: React.FC = () => {
 
         for (let i = 0; i < 7; i++) {
 
-
-
             if (i === index) {
                 support.push('choosedDay')
             } else {
@@ -34,7 +32,7 @@ const Home: React.FC = () => {
 
     const handleClickButton = () => {
         if(choosedDay !== null && choosedDay !== undefined && choosedDay !== '') {
-            router.push('/task')
+            router.push(`/task/${choosedDay}`)
         }
     }
 
