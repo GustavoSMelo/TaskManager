@@ -13,7 +13,16 @@ class TaskController extends Controller
         try {
 
             $tasks = TaskModel::where('user_id', $request->user()->currentAccessToken()->tokenable->id)->get();
-            return $tasks;
+
+            $all_tasks = [];
+
+            for ($i = 0; $i < count($tasks); $i++) {
+                if($tasks[$i]->week_days === $request->header('day')) {
+                    array_push($all_tasks, $tasks[$i]);
+                }
+            }
+
+            return $all_tasks;
 
         } catch (Exception $e) {
             return response()->json([
@@ -28,7 +37,7 @@ class TaskController extends Controller
 
         foreach ($days_tasks as $task) {
 
-            if (floatval($request->input('start_at')) >= floatval($task->start_at) 
+            if (floatval($request->input('start_at')) >= floatval($task->start_at)
             && floatval($request->input('start_at')) < floatval($task->end_at)) {
 
                 return response()->json([
@@ -36,14 +45,14 @@ class TaskController extends Controller
                 ], 400);
             }
 
-            else if (floatval($request->input('end_at')) > floatval($task->start_at) 
+            else if (floatval($request->input('end_at')) > floatval($task->start_at)
             && floatval($request->input('end_at')) <= floatval($task->end_at)) {
 
                 return response()->json([
                     'error' => 'you already have a task in this period'
                 ], 400);
 
-            } 
+            }
         }
 
         $newTask = new TaskModel();
@@ -65,11 +74,11 @@ class TaskController extends Controller
     public function show (int $id){
 
         return TaskModel::where('id', $id)->first();
-        
+
     }
 
     public function update (Request $request, int $id) {
-        
+
         $task = TaskModel::where('id', $id)->first();
         $allDayTask = TaskModel::where('week_days', $request->input('week_days'))->get();
 
@@ -81,16 +90,16 @@ class TaskController extends Controller
                 return response()->json([
                     'error' => 'Already have a task in this period'
                 ], 400);
-            } 
-            
+            }
+
             else if (floatval($request->input('end_at')) > floatval($tasks->start_at) &&
             floatval($request->input('end_at') <= floatval($tasks->end_at))) {
 
                 return response()->json([
                     'error' => 'Already have a task in this period'
                 ], 400);
-            } 
-            
+            }
+
             else {
 
                 $task->name = $request->input('name');
@@ -105,7 +114,7 @@ class TaskController extends Controller
                 return response()->json([
                     'message' => 'task created with success '
                 ]);
-            } 
+            }
         }
 
     }
@@ -116,7 +125,7 @@ class TaskController extends Controller
             $task = TaskModel::where('id', $id)->first();
 
             $task->delete();
-    
+
             return response()->json([
                 'message' => 'Task deleted with success'
             ]);
