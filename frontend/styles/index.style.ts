@@ -87,7 +87,6 @@ export const Container = styled.main<{formWidth: string, formHeight: string, for
         display: ${props => props.formDisplay};
         animation-duration: 1s;
         animation-fill-mode: unset;
-        background-color: #F6EBF5;
         flex-direction: row;
         align-items: center;
         justify-content: center;
