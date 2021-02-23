@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar'
-import { Container, WithoutContainer } from '../../styles/task.day.style'
+import { Container, WithoutContainer, TaskContainer } from '../../styles/task.day.style'
 import DayInterface from '../../interface/NavbarInterface'
 import api from '../../api/api'
 import Image from 'next/image'
-import { FaWindowClose } from 'react-icons/fa'
+import { FaWindowClose, FaPlusCircle, FaTrash, FaPencilAlt } from 'react-icons/fa'
 import Popup from '../../components/PopupBox'
+import TaskInterface from '../../interface/TaskInterface'
 
 export async function getServerSideProps(ctx: any) {
     const day = ctx.query.day
@@ -23,10 +24,11 @@ const Task : React.FC<DayInterface> = (props) => {
     const [tasks, setTasks] = useState([])
     const [name, setName] = useState('')
     const [description, setDescription] = useState('')
-    const [week_days, setWeek_days] = useState('')
-    const [start_at, setStart_at] = useState('')
-    const [end_at, setEnd_at] = useState('')
+    const [week_days, setWeek_days] = useState(props.day)
+    const [start_at, setStart_at] = useState(null)
+    const [end_at, setEnd_at] = useState(null)
     const [openForm, setOpenForm] = useState('none')
+    const [displayButton, setDisplayButton] = useState('flex')
     const [PopupBox, setPopupBox] = useState(<></>)
 
     const getDataByAPI = async () => {
@@ -44,7 +46,7 @@ const Task : React.FC<DayInterface> = (props) => {
             setTimeout(() => {
                 setPopupBox(<></>)
             }, 3000)
-            console.log({resposta: response})
+            console.log({resposta: response.data})
         } catch (err) {
             console.log({Error: err})
         }
@@ -65,11 +67,30 @@ const Task : React.FC<DayInterface> = (props) => {
             }})
 
             setPopupBox(<Popup textColor='#0AFA00' backgroundColor='#CEFAD5' message='Task created with success ' />)
+
+            setName('')
+            setDescription('')
+            setEnd_at(0)
+            setStart_at(0)
+            setWeek_days(props.day)
+            setOpenForm('none')
+            setDisplayButton('flex')
+
         } catch (err) {
             setPopupBox(<Popup textColor='#f00' backgroundColor='#FCD9D5' message='Error to create a task, please try again' />)
 
             console.error({Error: err})
         }
+    }
+
+    const handlerDeleteTask = async (id: number) => {
+        await api.delete(`/api/task/${id}`, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('bearer-token')}`
+            }
+        })
+
+        setTasks(tasks.filter((task: TaskInterface) => task.id !== id))
     }
 
     const viewWithoutTask = () => {
@@ -120,7 +141,7 @@ const Task : React.FC<DayInterface> = (props) => {
                         type='number'
                         id='name'
                         value={start_at}
-                        onChange={event => setStart_at(event.target.value)}
+                        onChange={event => setStart_at(parseFloat(event.target.value))}
                         required
                     />
 
@@ -130,7 +151,7 @@ const Task : React.FC<DayInterface> = (props) => {
                         type='number'
                         id='name'
                         value={end_at}
-                        onChange={event => setEnd_at(event.target.value)}
+                        onChange={event => setEnd_at(parseFloat(event.target.value))}
                         required
                     />
 
@@ -142,7 +163,77 @@ const Task : React.FC<DayInterface> = (props) => {
 
     const showTheTasks = () => {
         return (
-            <h1>aaa</h1>
+            <TaskContainer buttonDisplay={displayButton} formDisplayed={openForm}>
+                {tasks.map((task : TaskInterface) => <article>
+                    <h1>{task.name}</h1>
+                    <hr />
+                    <p>{task.description}</p>
+                    <h4>Start at: {task.start_at} | End at: {task.end_at}</h4>
+                    <span>
+                        <FaTrash className='TaskIcon' onClick={() => handlerDeleteTask(task.id)} />
+                        <FaPencilAlt className='TaskIcon' />
+                    </span>
+                </article>)}
+
+                <button onClick={() => {
+                    setOpenForm('flex')
+                    setDisplayButton('none')
+                }}><FaPlusCircle style={{margin: '10px'}} /> Create a new task</button>
+
+                <form>
+                    <FaWindowClose className="CloseIconForm" onClick={() => {
+                        setOpenForm('none')
+                        setDisplayButton('flex')
+                    }}/>
+
+                    <h1>Create your task here</h1>
+
+                    <hr />
+
+                    <input placeholder='insert a task name here... '
+                        type='text'
+                        name='name'
+                        id='name'
+                        value={name}
+                        onChange={event => setName(event.target.value)}
+                        required
+                    />
+
+                    <textarea
+                        placeholder='insert a description of task here'    name='description'
+                        id='description'
+                        value={description}
+                        onChange={event => setDescription(event.target.value)}
+                        required
+                    />
+
+                    <select value={week_days} onChange={e => setWeek_days(e.target.value)}>
+                        <option selected value={props.day}>{props.day}</option>
+                    </select>
+
+                    <input
+                        placeholder='Start at..'
+                        name='name'
+                        type='number'
+                        id='name'
+                        value={start_at}
+                        onChange={event => setStart_at(parseFloat(event.target.value))}
+                        required
+                    />
+
+                    <input
+                        placeholder='End at.. '
+                        name='name'
+                        type='number'
+                        id='name'
+                        value={end_at}
+                        onChange={event => setEnd_at(parseFloat(event.target.value))}
+                        required
+                    />
+
+                    <button type='button' onClick={() => handlerCreateTask()}> Create Task</button>
+                </form>
+            </TaskContainer>
         )
     }
 
