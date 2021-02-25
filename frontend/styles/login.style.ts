@@ -53,4 +53,10 @@ export const Container = styled.main`
         color: #fff;
     }
 
+    @media (max-width: 620px) {
+        form {
+            width: 95%;
+        }
+    }
+
 `
