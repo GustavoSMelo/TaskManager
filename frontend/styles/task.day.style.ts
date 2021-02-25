@@ -117,6 +117,12 @@ export const TaskContainer = styled.section<{ buttonDisplay: string, formDisplay
         display: flex;
     }
 
+    @media screen and (max-width: 620px) {
+        form, article, button {
+            width: 95%;
+        }
+    }
+
 `
 
 export const WithoutContainer = styled.section<{formDisplayed: string}>`
@@ -139,7 +145,7 @@ export const WithoutContainer = styled.section<{formDisplayed: string}>`
         background-color: #101010dd;
         position: absolute;
         width: 100vw;
-        height: 90vh;
+        height: 110vh;
         align-items: center;
         justify-content: center;
     }
@@ -194,5 +200,11 @@ export const WithoutContainer = styled.section<{formDisplayed: string}>`
     button:hover {
         background-color: #36344a;
         transition: 0.75s;
+    }
+
+    @media screen and (max-width: 620px) {
+        button, form > input, form > textarea, form > select {
+            width: 95%;
+        }
     }
 `
