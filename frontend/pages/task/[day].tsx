@@ -7,8 +7,9 @@ import Image from 'next/image'
 import { FaWindowClose, FaPlusCircle, FaTrash, FaPencilAlt } from 'react-icons/fa'
 import Popup from '../../components/PopupBox'
 import TaskInterface from '../../interface/TaskInterface'
+import { useRouter } from 'next/router'
 
-export async function getServerSideProps(ctx: any) {
+export const getServerSideProps = async (ctx: any) => {
     const day = ctx.query.day
 
     return {
@@ -30,6 +31,7 @@ const Task : React.FC<DayInterface> = (props) => {
     const [openForm, setOpenForm] = useState('none')
     const [displayButton, setDisplayButton] = useState('flex')
     const [PopupBox, setPopupBox] = useState(<></>)
+    const router = useRouter()
 
     const getDataByAPI = async () => {
         try {
@@ -171,7 +173,7 @@ const Task : React.FC<DayInterface> = (props) => {
                     <h4>Start at: {task.start_at} | End at: {task.end_at}</h4>
                     <span>
                         <FaTrash className='TaskIcon' onClick={() => handlerDeleteTask(task.id)} />
-                        <FaPencilAlt className='TaskIcon' />
+                        <FaPencilAlt className='TaskIcon' onClick={() => router.push(`/task/edit/${task.id}`)}/>
                     </span>
                 </article>)}
 
