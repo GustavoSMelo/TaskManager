@@ -9,7 +9,6 @@ export const Container = styled.nav`
     color: #fff;
     justify-content: space-between;
     padding: 15px;
-    margin-bottom: 15px;
     font-size: 16pt;
     align-items: center;
     font-weight: bold;
