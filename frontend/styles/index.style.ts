@@ -151,6 +151,17 @@ export const Container = styled.main<{formWidth: string, formHeight: string, for
         button {
             margin-bottom: 30px;
         }
+
+        .enterForm, .exitForm {
+            position: absolute;
+            flex-direction: column !important;
+            height: auto;
+            z-index: 1;
+        }
+
+        .enterForm > form > input, .exitForm > form > input {
+            width: 95vw;
+        }
     }
 
     @media screen and (max-width: 520px) {
