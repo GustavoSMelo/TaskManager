@@ -1,6 +1,6 @@
 <h1>TaskManager Free</h1>
 <p align="center">
-    <img src='.github/ProjectImage.png' alt='Illustration about project' width='400' />
+    <img src='.github/ProjectImage.png' alt='Illustration about project' />
 </p>
 <br />
 <p>
@@ -8,11 +8,11 @@
     Task Manager is a free project that allows you to manage your tasks during all day long
 </p>
 
-<img src='.github/LoginSystemWithEmailVerify.gif' alt='showing login system with email verify' width='400' />
+<img src='.github/LoginSystemWithEmailVerify.gif' alt='showing login system with email verify'/>
 
-<img src='.github/MobileVersion.gif' alt='Mobile version of the webapp' width='400' />
+<img src='.github/MobileVersion.gif' alt='Mobile version of the webapp'/>
 
-<img src='.github/Tasks.gif' alt='Showing about create, update and delete tasks' width='400' />
+<img src='.github/Tasks.gif' alt='Showing about create, update and delete tasks'/>
 
 <p>
     I am learning the tecnologies more modern than we have today (PHP, JavaScript and Typescript). And I want to continue learning more and more, to share my knowledge with another peoples
