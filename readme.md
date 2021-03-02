@@ -42,6 +42,8 @@
 - open your terminal
 - go inside folder `backend` in this project
 - run `composer install`
+- create a `dotenv` using your credentials (is necessary you create account in sendgrid and pass env vars of it)
+- run `php artisan migrate` 
 - after that, run: `(sudo) php artisan serve` 
 - the backend will run in: http://localhost:8000
 
